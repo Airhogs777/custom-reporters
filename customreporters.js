@@ -67,8 +67,9 @@
     element.id = "customReportersDialog";
     element.innerHTML = dialogHTML;
     document.body.appendChild(element);
+    window.removeEventListener("load", init);
   }
-  init();
+  window.addEventListener("load", init);
 
   // Cleanup function when the extension is unloaded
   ext._shutdown = function() {};
