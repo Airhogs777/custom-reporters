@@ -1,6 +1,6 @@
 (function(ext) {
-  var dialogHTML = `<!-- This code is adapted from Pixie - https://github.com/nathan/pixie (which also uses an MIT license) -->
-  <div class="dialog" style="transform: translate(562px, 313px);">
+  function init() {
+    var dialogHTML = `<!-- This code is adapted from Pixie - https://github.com/nathan/pixie (which also uses an MIT license) -->
     <style>
       .dialog {
           position: fixed;
@@ -54,15 +54,19 @@
           margin: 0 5px;
       }
     </style>
-    <div class="dialog-title">New Block</div>
-    <div class="dialog-content">
-      <div class="dialog-buttons">
-        <button class="ui-button">OK</button>
-        <button class="ui-button">Cancel</button>
+    <div class="dialog" style="transform: translate(562px, 313px);">
+      <div class="dialog-title">New Block</div>
+      <div class="dialog-content">
+        <div class="dialog-buttons">
+          <button class="ui-button">OK</button>
+          <button class="ui-button">Cancel</button>
+        </div>
       </div>
-    </div>
-  </div>`;
-  document.body.innerHTML += dialogHTML;
+    </div>`;
+    var element = document.createElement("div");
+    element.id = "customReportersDialog";
+    document.body.appendChild(element);
+  }
 
   // Cleanup function when the extension is unloaded
   ext._shutdown = function() {};
@@ -72,7 +76,7 @@
   ext._getStatus = function() {
       return {status: 2, msg: 'Ready'};
   };
-  
+
   ext.power = function(base, exponent) {
     return Math.pow(base, exponent);
   };
