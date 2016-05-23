@@ -10,7 +10,7 @@
       <style>
         .dialog {
             position: fixed;
-            width: 380;
+            width: 380px;
             left: calc( 50% - ( 380px / 2 ) );
             top: calc( 50% - 100px );
             z-index: 2;
