@@ -65,6 +65,7 @@
     </div>`;
     var element = document.createElement("div");
     element.id = "customReportersDialog";
+    element.innerHTML = dialogHTML;
     document.body.appendChild(element);
   }
 
