@@ -10,7 +10,8 @@
       <style>
         .dialog {
             position: fixed;
-            left: calc( 50% - 100px );
+            width: 380;
+            left: calc( 50% - ( 380px / 2 ) );
             top: calc( 50% - 100px );
             z-index: 2;
             color: #5c5d5f;
@@ -62,7 +63,7 @@
         }
       </style>
       <div class="dialog" style="display: none;">
-        <div class="dialog-title">New Block</div>
+        <div class="dialog-title">New Reporter</div>
         <div class="dialog-content">
           <div class="dialog-buttons">
             <button class="ui-button" id="customReportersOK">OK</button>
@@ -75,6 +76,7 @@
       element.innerHTML = dialogHTML;
       document.body.appendChild(element);
       element.getElementById("customReportersCancel").addEventListener("click", cancelDialog);
+      element.getElementById("customReportersOK").addEventListener("click", cancelDialog); //fix this later
     }
   }
 
