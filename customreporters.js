@@ -68,10 +68,10 @@
       var element = document.createElement("div");
       element.id = "customReportersDialog";
       element.innerHTML = dialogHTML;
-      element.querySelector(".customReportersCancel").addEventListener("click", function() {
+      document.body.appendChild(element);
+      element.getElementById("customReportersCancel").addEventListener("click", function() {
         document.getElementById("customReportersDialog").querySelector(".dialog").style.display = "none";
       });
-      document.body.appendChild(element);
     }
   }
 
