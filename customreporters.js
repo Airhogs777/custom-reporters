@@ -1,125 +1,57 @@
+var customReporters = {
+  inProgress: {},
+};
 (function(ext) {
 
-  function cancelDialog() {
+  function setRepType(intype) {
+    if(intype == "reporter") {
+      document.getElementById("repTypeRep").classList.add("checked");
+      document.getElementById("repTypeBool").classList.remove("checked");
+      //also change block shape and stuff
+    } else {
+      document.getElementById("repTypeBool").classList.add("checked");
+      document.getElementById("repTypeRep").classList.remove("checked");
+      //also change block shape and stuff
+    }
+
+  }
+  function addInput(intype) {
+
+  }
+  function closeDialog() {
     document.getElementById("customReportersDialog").querySelector(".dialog").style.display = "none";
   }
 
   function appendDialog() {
     if(!document.getElementById("customReportersDialog")) {
       var dialogHTML = `<!-- This code is adapted from Pixie - https://github.com/nathan/pixie (which also uses an MIT license) and Scratchblocks -https://github.com/tjvr/scratchblocks/ (which is in the public domain) -->
-      <style>
-        .dialog {
-            position: fixed;
-            width: 380px;
-            left: calc( 50% - ( 380px / 2 ) );
-            top: calc( 50% - 100px );
-            z-index: 2;
-            color: #5c5d5f;
-            text-align: center;
-            font-family: sans-serif;
-            border-radius: 7px 7px 0 0;
-            box-shadow: 3px 3px 8px rgba(51, 51, 51, .75);
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            -o-user-select: none;
-            user-select: none;
-        }
-        .dialog-title {
-            display: block;
-            border: 1px solid #b0b0b0;
-            border-radius: 7px 7px 0 0;
-            background: linear-gradient(#e0e0e0, #d0d0d0);
-            font-size: 14px;
-            height: 30px;
-            line-height: 30px;
-            padding: 0 14px;
-            cursor: default;
-        }
-        .dialog-content {
-            background: #fff;
-            padding: 14px;
-            border: 1px solid #b0b0b0;
-            border-top: 0;
-            font-size: 14px;
-        }
-        .dialog-inputButtons {
-          margin: 0 75px;
-        }
-        .dialog-inputButtons div {
-          text-align: left;
-          color: #555;
-          position: relative;
-          height: 32px;
-          box-sizing: border-box;
-          padding-top: 4px;
-        }
-        .dialog-inputButtons div .ui-button {
-          position: absolute;
-          right: 0;
-          top: 0;
-          padding: 2px 0 1px !important;
-          width: 52px;
-        }
-        .dialog .ui-button svg {
-          transform: scale(.8);
-        }
-        .dialog-typeChooser {margin: 6px 0;}
-        .dialog-typeChooser .ui-button {
-          padding: 2px 0 1px !important;
-          width: 52px;
-          border-right: none;
-          border-top-right-radius: 0;
-          border-bottom-right-radius: 0;
-        }
-        .dialog-typeChooser .ui-button.checked {
-          background: linear-gradient(#e6e8e8, #ffffff) !important;
-        }
-        .dialog-typeChooser .ui-button:last-child {
-          border-radius: 0 6px 6px 0;
-          border-right: 1px solid #d0d1d2;
-        }
-        .dialog-buttons {
-            margin-top: 14px;
-        }
-        .ui-button {
-            margin: 0;
-            border: 1px solid #d0d1d2;
-            border-radius: 6px;
-            padding: 0 7px 1px;
-            height: 26px;
-            background: linear-gradient(#ffffff, #e6e8e8);
-            color: #5c5d5f !important;
-            font: inherit;
-            font-size: 12px;
-            white-space: nowrap;
-            text-align: center;
-        }
-        .dialog-buttons .ui-button {
-            min-width: 51px;
-            margin: 0 5px;
-        }
-        /* scratchblocks stuff */
-        .sb-label{
-            font-family:Lucida Grande,Verdana,Arial,DejaVu Sans,sans-serif;
-            font-weight:700;
-            fill:#fff;
-            font-size:10px;
-            word-spacing:+1px
-        }
-        .sb-extension{fill:#4b4a60}
-        .sb-grey{fill:#969696}
-        .sb-bevel{filter:url(#bevelFilter)}
-        .sb-input{filter:url(#inputBevelFilter)}
-        .sb-input-number,.sb-input-number-dropdown,.sb-input-string{fill:#fff}
-        .sb-literal-number,.sb-literal-number-dropdown,.sb-literal-string{font-weight:400;
-            font-size:9px;
-            word-spacing:0}
-        .sb-literal-number,.sb-literal-string{fill:#000}
-      </style>
+      <link href="customreporters.css" rel="stylesheet"/>
       <div class="dialog" style="display: none;">
         <div class="dialog-title">New Reporter</div>
         <div class="dialog-content">
+          <div id="blockPreview">
+            <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="29" height="21">
+              <defs>
+                <filter id="bevelFilter" x0="-50%" y0="-50%" width="200%" height="200%">
+                  <feGaussianBlur result="blur-1" in="SourceAlpha" stdDeviation="1 1"/>
+                  <feFlood result="flood-2" in="undefined" flood-color="#fff" flood-opacity="0.15"/>
+                  <feOffset result="offset-3" in="blur-1" dx="1" dy="1"/>
+                  <feComposite result="comp-4" operator="arithmetic" in="SourceAlpha" in2="offset-3" k2="1" k3="-1"/>
+                  <feComposite result="comp-5" operator="in" in="flood-2" in2="comp-4"/>
+                  <feFlood result="flood-6" in="undefined" flood-color="#000" flood-opacity="0.7"/>
+                  <feOffset result="offset-7" in="blur-1" dx="-1" dy="-1"/>
+                  <feComposite result="comp-8" operator="arithmetic" in="SourceAlpha" in2="offset-7" k2="1" k3="-1"/>
+                  <feComposite result="comp-9" operator="in" in="flood-6" in2="comp-8"/>
+                  <feMerge result="merge-10">
+                    <feMergeNode in="SourceGraphic"/>
+                    <feMergeNode in="comp-5"/>
+                    <feMergeNode in="comp-9"/>
+                  </feMerge>
+                </filter>
+              </defs>
+              <path d="M 10 0 L 18.46875 0 A 10 10 0 0 1 18.46875 20 L 10 20 A 10 10 0 0 1 10 0 Z" class="sb-extension sb-bevel"/>
+            </svg>
+          </div>
           <div class="dialog-typeChooser">
             <button class="ui-button checked" id="repTypeRep">
               <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="29" height="21">
@@ -262,9 +194,18 @@
       element.id = "customReportersDialog";
       element.innerHTML = dialogHTML;
       document.body.appendChild(element);
-      document.getElementById("customReportersCancel").addEventListener("click", cancelDialog);
-      document.getElementById("customReportersOK").addEventListener("click", cancelDialog); //fix this later
+      document.getElementById("repTypeRep").addEventListener("click", function() {setRepType("reporter")});
+      document.getElementById("repTypeBool").addEventListener("click", function() {setRepType("boolean")});
+      document.getElementById("addStringInput").addEventListener("click", function() {addInput("string")});
+      document.getElementById("addNumberInput").addEventListener("click", function() {addInput("number")});
+      document.getElementById("addBoolInput").addEventListener("click", function() {addInput("boolean")});
+      document.getElementById("customReportersCancel").addEventListener("click", closeDialog);
+      document.getElementById("customReportersOK").addEventListener("click", closeDialog); //fix this later
     }
+  }
+
+  function rebuildSVG() {
+
   }
 
   // Cleanup function when the extension is unloaded
@@ -279,6 +220,8 @@
 
   ext.showDialog = function(base, exponent) {
     document.getElementById("customReportersDialog").querySelector(".dialog").style.display = "block";
+    customReporters.inProgress = [["",""]];
+    rebuildSVG();
     return 0;
   };
 
