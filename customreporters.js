@@ -5,8 +5,8 @@
       <style>
         .dialog {
             position: fixed;
-            left: 0;
-            top: 0;
+            left: calc( 50% - 100px );
+            top: calc( 50% - 100px );
             z-index: 2;
             color: #5c5d5f;
             text-align: center;
@@ -27,6 +27,7 @@
             height: 30px;
             line-height: 30px;
             padding: 0 14px;
+            cursor: default;
         }
         .dialog-content {
             background: #fff;
@@ -55,18 +56,21 @@
             margin: 0 5px;
         }
       </style>
-      <div class="dialog" style="transform: translate(562px, 313px);">
+      <div class="dialog" style="display: none;">
         <div class="dialog-title">New Block</div>
         <div class="dialog-content">
           <div class="dialog-buttons">
-            <button class="ui-button">OK</button>
-            <button class="ui-button">Cancel</button>
+            <button class="ui-button" id="customReportersOK">OK</button>
+            <button class="ui-button" id="customReportersCancel">Cancel</button>
           </div>
         </div>
       </div>`;
       var element = document.createElement("div");
       element.id = "customReportersDialog";
       element.innerHTML = dialogHTML;
+      element.querySelector("customReportersCancel").addEventListener("click", function() {
+        document.getElementById("customReportersDialog").querySelector(".dialog").style.display = "none";
+      });
       document.body.appendChild(element);
     }
   }
@@ -81,15 +85,16 @@
       return {status: 2, msg: 'Ready'};
   };
 
-  ext.power = function(base, exponent) {
-    return Math.pow(base, exponent);
+  ext.showDialog = function(base, exponent) {
+    document.getElementById("customReportersDialog").querySelector(".dialog").style.display = "block";
+    return 0;
   };
 
   // Block and block menu descriptions
   var descriptor = {
       blocks: [
         // Block type, block name, function name, param1 default value, param2 default value
-        ['getParam', 'Make a Reporter', 'power']
+        ['getParam', 'Make a Reporter', 'showDialog']
       ]
   };
 
