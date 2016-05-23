@@ -75,8 +75,8 @@
       element.id = "customReportersDialog";
       element.innerHTML = dialogHTML;
       document.body.appendChild(element);
-      element.getElementById("customReportersCancel").addEventListener("click", cancelDialog);
-      element.getElementById("customReportersOK").addEventListener("click", cancelDialog); //fix this later
+      document.getElementById("customReportersCancel").addEventListener("click", cancelDialog);
+      document.getElementById("customReportersOK").addEventListener("click", cancelDialog); //fix this later
     }
   }
 
