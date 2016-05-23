@@ -1,4 +1,9 @@
 (function(ext) {
+
+  function cancelDialog() {
+    document.getElementById("customReportersDialog").querySelector(".dialog").style.display = "none";
+  }
+
   function appendDialog() {
     if(!document.getElementById("customReportersDialog")) {
       var dialogHTML = `<!-- This code is adapted from Pixie - https://github.com/nathan/pixie (which also uses an MIT license) -->
@@ -69,9 +74,7 @@
       element.id = "customReportersDialog";
       element.innerHTML = dialogHTML;
       document.body.appendChild(element);
-      element.getElementById("customReportersCancel").addEventListener("click", function() {
-        document.getElementById("customReportersDialog").querySelector(".dialog").style.display = "none";
-      });
+      element.getElementById("customReportersCancel").addEventListener("click", cancelDialog);
     }
   }
 
