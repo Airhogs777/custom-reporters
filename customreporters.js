@@ -58,11 +58,26 @@
           position: absolute;
           right: 0;
           top: 0;
-          padding: 0 0 1px !important;
+          padding: 2px 0 1px !important;
           width: 52px;
         }
-        .dialog-inputButtons div .ui-button svg {
+        .dialog .ui-button svg {
           transform: scale(.8);
+        }
+        .dialog-typeChooser {margin: 6px 0;}
+        .dialog-typeChooser .ui-button {
+          padding: 2px 0 1px !important;
+          width: 52px;
+          border-right: none;
+          border-top-right-radius: 0;
+          border-bottom-right-radius: 0;
+        }
+        .dialog-typeChooser .ui-button.checked {
+          background: linear-gradient(#e6e8e8, #ffffff) !important;
+        }
+        .dialog-typeChooser .ui-button:last-child {
+          border-radius: 0 6px 6px 0;
+          border-right: 1px solid #d0d1d2;
         }
         .dialog-buttons {
             margin-top: 14px;
@@ -74,7 +89,7 @@
             padding: 0 7px 1px;
             height: 26px;
             background: linear-gradient(#ffffff, #e6e8e8);
-            color: #5c5d5f;
+            color: #5c5d5f !important;
             font: inherit;
             font-size: 12px;
             white-space: nowrap;
@@ -92,8 +107,6 @@
             font-size:10px;
             word-spacing:+1px
         }
-        .sb-custom{fill:#632d99}
-        .sb-custom-arg{fill:#5947b1}
         .sb-extension{fill:#4b4a60}
         .sb-grey{fill:#969696}
         .sb-bevel{filter:url(#bevelFilter)}
@@ -107,10 +120,57 @@
       <div class="dialog" style="display: none;">
         <div class="dialog-title">New Reporter</div>
         <div class="dialog-content">
+          <div class="dialog-typeChooser">
+            <button class="ui-button checked" id="repTypeRep">
+              <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="29" height="21">
+                <defs>
+                  <filter id="bevelFilter" x0="-50%" y0="-50%" width="200%" height="200%">
+                    <feGaussianBlur result="blur-1" in="SourceAlpha" stdDeviation="1 1"/>
+                    <feFlood result="flood-2" in="undefined" flood-color="#fff" flood-opacity="0.15"/>
+                    <feOffset result="offset-3" in="blur-1" dx="1" dy="1"/>
+                    <feComposite result="comp-4" operator="arithmetic" in="SourceAlpha" in2="offset-3" k2="1" k3="-1"/>
+                    <feComposite result="comp-5" operator="in" in="flood-2" in2="comp-4"/>
+                    <feFlood result="flood-6" in="undefined" flood-color="#000" flood-opacity="0.7"/>
+                    <feOffset result="offset-7" in="blur-1" dx="-1" dy="-1"/>
+                    <feComposite result="comp-8" operator="arithmetic" in="SourceAlpha" in2="offset-7" k2="1" k3="-1"/>
+                    <feComposite result="comp-9" operator="in" in="flood-6" in2="comp-8"/>
+                    <feMerge result="merge-10">
+                      <feMergeNode in="SourceGraphic"/>
+                      <feMergeNode in="comp-5"/>
+                      <feMergeNode in="comp-9"/>
+                    </feMerge>
+                  </filter>
+                </defs>
+                <path d="M 10 0 L 18.46875 0 A 10 10 0 0 1 18.46875 20 L 10 20 A 10 10 0 0 1 10 0 Z" class="sb-grey sb-bevel"/>
+              </svg>
+            </button><button class="ui-button" id="repTypeBool">
+              <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="35" height="21">
+                <defs>
+                  <filter id="bevelFilter" x0="-50%" y0="-50%" width="200%" height="200%">
+                    <feGaussianBlur result="blur-1" in="SourceAlpha" stdDeviation="1 1"/>
+                    <feFlood result="flood-2" in="undefined" flood-color="#fff" flood-opacity="0.15"/>
+                    <feOffset result="offset-3" in="blur-1" dx="1" dy="1"/>
+                    <feComposite result="comp-4" operator="arithmetic" in="SourceAlpha" in2="offset-3" k2="1" k3="-1"/>
+                    <feComposite result="comp-5" operator="in" in="flood-2" in2="comp-4"/>
+                    <feFlood result="flood-6" in="undefined" flood-color="#000" flood-opacity="0.7"/>
+                    <feOffset result="offset-7" in="blur-1" dx="-1" dy="-1"/>
+                    <feComposite result="comp-8" operator="arithmetic" in="SourceAlpha" in2="offset-7" k2="1" k3="-1"/>
+                    <feComposite result="comp-9" operator="in" in="flood-6" in2="comp-8"/>
+                    <feMerge result="merge-10">
+                      <feMergeNode in="SourceGraphic"/>
+                      <feMergeNode in="comp-5"/>
+                      <feMergeNode in="comp-9"/>
+                    </feMerge>
+                  </filter>
+                </defs>
+                <path d="M 10.5 0 L 23.96875 0 34.46875 10.5 L 34.46875 10.5 23.96875 21 L 10.5 21 0 10.5 L 0 10.5 10.5 0 Z" class="sb-grey sb-bevel"/>
+              </svg>
+            </button>
+          </div>
           <div class="dialog-inputButtons">
             <div>
               Add number input:
-              <button class="ui-button" id="foo">
+              <button class="ui-button" id="addNumberInput">
                 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="29" height="21">
                   <defs>
                     <filter id="bevelFilter" x0="-50%" y0="-50%" width="200%" height="200%">
@@ -136,7 +196,7 @@
             </div>
             <div>
               Add string input:
-              <button class="ui-button" id="foo">
+              <button class="ui-button" id="addStringInput">
               <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="29" height="21">
                 <defs>
                   <filter id="bevelFilter" x0="-50%" y0="-50%" width="200%" height="200%">
@@ -162,7 +222,7 @@
             </div>
             <div>
               Add boolean input:
-              <button class="ui-button" id="foo">
+              <button class="ui-button" id="addBoolInput">
                 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="35" height="21">
                   <defs>
                     <filter id="bevelFilter" x0="-50%" y0="-50%" width="200%" height="200%">
