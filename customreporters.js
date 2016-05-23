@@ -68,6 +68,7 @@
     element.innerHTML = dialogHTML;
     document.body.appendChild(element);
   }
+  init();
 
   // Cleanup function when the extension is unloaded
   ext._shutdown = function() {};
