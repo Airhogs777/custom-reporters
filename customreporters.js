@@ -67,9 +67,7 @@
     element.id = "customReportersDialog";
     element.innerHTML = dialogHTML;
     document.body.appendChild(element);
-    window.removeEventListener("load", init);
   }
-  window.addEventListener("load", init);
 
   // Cleanup function when the extension is unloaded
   ext._shutdown = function() {};
@@ -77,6 +75,7 @@
   // Status reporting code
   // Use this to report missing hardware, plugin or unsupported browser
   ext._getStatus = function() {
+      init();
       return {status: 2, msg: 'Ready'};
   };
 
