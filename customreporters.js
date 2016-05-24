@@ -1,19 +1,19 @@
 var customReporters = {
+  inProgressShape: "",
   inProgress: {},
 };
 (function(ext) {
 
   function setRepType(intype) {
+    customReporters.inProgressShape = intype;
     if(intype == "reporter") {
       document.getElementById("repTypeRep").classList.add("checked");
       document.getElementById("repTypeBool").classList.remove("checked");
-      //also change block shape and stuff
     } else {
       document.getElementById("repTypeBool").classList.add("checked");
       document.getElementById("repTypeRep").classList.remove("checked");
-      //also change block shape and stuff
     }
-
+    rebuildSVG();
   }
   function addInput(intype) {
 
@@ -25,7 +25,7 @@ var customReporters = {
   function appendDialog() {
     if(!document.getElementById("customReportersDialog")) {
       var dialogHTML = `<!-- This code is adapted from Pixie - https://github.com/nathan/pixie (which also uses an MIT license) and Scratchblocks -https://github.com/tjvr/scratchblocks/ (which is in the public domain) -->
-      <link href="customreporters.css" rel="stylesheet"/>
+      <link href="http://airhogs777.github.io/custom-reporters/customreporters.css" rel="stylesheet"/>
       <div class="dialog" style="display: none;">
         <div class="dialog-title">New Reporter</div>
         <div class="dialog-content">
@@ -49,7 +49,9 @@ var customReporters = {
                   </feMerge>
                 </filter>
               </defs>
-              <path d="M 10 0 L 18.46875 0 A 10 10 0 0 1 18.46875 20 L 10 20 A 10 10 0 0 1 10 0 Z" class="sb-extension sb-bevel"/>
+              <g id="blockPreviewPath">
+                <path d="M 10 0 L 18.46875 0 A 10 10 0 0 1 18.46875 20 L 10 20 A 10 10 0 0 1 10 0 Z" class="sb-extension sb-bevel"/>
+              </g>
             </svg>
           </div>
           <div class="dialog-typeChooser">
@@ -205,7 +207,18 @@ var customReporters = {
   }
 
   function rebuildSVG() {
-
+    var g = document.getElementById("blockPreview").firstElementChild.getElementById("blockPreviewPath"),
+      repShape = `<path d="M 10 0 L 18.46875 0 A 10 10 0 0 1 18.46875 20 L 10 20 A 10 10 0 0 1 10 0 Z" class="sb-extension sb-bevel"/>`,
+      boolShape = `<path d="M 10.5 0 L 23.96875 0 34.46875 10.5 L 34.46875 10.5 23.96875 21 L 10.5 21 0 10.5 L 0 10.5 10.5 0 Z" class="sb-grey sb-bevel"/>`,
+      path;
+    if(customReporters.inProgressShape == "reporter") {
+      path = repShape;
+    } else {
+      path = boolShape;
+    }
+    var doc = new DOMParser().parseFromString(path, "application/xml");
+    g.removeChild(g.firstElementChild);
+    g.appendChild(  g.ownerDocument.importNode(doc.documentElement, true)  );
   }
 
   // Cleanup function when the extension is unloaded
@@ -221,6 +234,7 @@ var customReporters = {
   ext.showDialog = function(base, exponent) {
     document.getElementById("customReportersDialog").querySelector(".dialog").style.display = "block";
     customReporters.inProgress = [["",""]];
+    customReporters.inProgressShape = "reporter";
     rebuildSVG();
     return 0;
   };
