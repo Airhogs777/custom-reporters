@@ -227,6 +227,7 @@ var customReporters = {
       document.getElementById("addBoolInput").addEventListener("click", function() {addInput("boolean")});
       document.getElementById("customReportersCancel").addEventListener("click", closeDialog);
       document.getElementById("customReportersOK").addEventListener("click", closeDialog); //fix this later
+      document.getElementById("blockPreview").addEventListener("input", function(e) {inputsEdited(e)});
     }
   }
 
@@ -271,7 +272,11 @@ var customReporters = {
         textpath = `<text x="0" y="10" class="sb-label sb-literal-number">` + text + `</text>`;
       }
       g.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="300" height="30">` + textpath + `</svg`;
-      return g.firstElementChild.firstElementChild.getBBox().width;
+      if(g.firstElementChild.firstElementChild.getBBox().width < 10) {
+        return 10
+      } else {
+        return g.firstElementChild.firstElementChild.getBBox().width;
+      }
     }
 
     function generateInput(intype, text) {
@@ -329,6 +334,28 @@ var customReporters = {
     g.innerHTML = customReporters.svg[0] + path + childpaths + customReporters.svg[1];
   }
 
+  function inputsEdited(e) {
+    var caret = window.getSelection().getRangeAt(0),
+      offset = caret.startOffset,
+      g = document.getElementById("blockPreview").querySelectorAll("text"),
+      targetElem;
+    for(i = 0; i < g.length; i++) {
+      if(g[i] == caret.startContainer.parentNode) {
+        targetElem = i;
+      }
+      customReporters.inProgress[i][1] = g[i].textContent;
+    }
+    rebuildSVG();
+    h = document.getElementById("blockPreview").querySelectorAll("text")[targetElem],
+    sel = window.getSelection();
+    h.focus();
+    var range = document.createRange();
+    range.setStart(h.firstChild, offset)
+    sel.removeAllRanges();
+    sel.addRange(range);
+    //h.setSelectionRange(caret.startOffset, caret.startOffset);
+  }
+
   // Cleanup function when the extension is unloaded
   ext._shutdown = function() {
     document.body.removeChild(document.getElementById("customReportersDialog"));
@@ -343,7 +370,7 @@ var customReporters = {
 
   ext.showDialog = function(base, exponent) {
     document.getElementById("customReportersDialog").querySelector(".dialog").style.display = "block";
-    customReporters.inProgress = [["label", "foo"]];
+    customReporters.inProgress = [];
     customReporters.inProgressShape = "reporter";
     rebuildSVG();
     return 0;
