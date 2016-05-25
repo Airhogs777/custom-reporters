@@ -10,7 +10,7 @@
 var customReporters = {
   inProgressShape: "reporter",
   inProgress: [],
-  svg: [`<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="300" height="30">
+  svg: [`<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="350" height="30">
     <defs>
       <filter id="bevelFilter" x0="-50%" y0="-50%" width="200%" height="200%">
         <feGaussianBlur result="blur-1" in="SourceAlpha" stdDeviation="1 1"/>
@@ -48,6 +48,7 @@ var customReporters = {
     <g id="blockPreviewPath">`,`</g>
   </svg>`],
   reporters: {},
+  lastSelectedInput: 0,
 };
 (function(ext) {
 
@@ -64,12 +65,27 @@ var customReporters = {
   }
 
   function addInput(intype) {
-    var varnum = customReporters.inProgress.filter(function(x) {
-      return x[1].match(new RegExp(intype + "\\d+"));
-    });
-    varnum = varnum.length + 1;
+    var varnum = 1,
+      g;
+    for(i = 0; i < customReporters.inProgress.length; i++) {
+      g = customReporters.inProgress[i][1];
+      if(g.match(new RegExp(intype + "\\d+"))) {
+        if(g.match(/\d+/)[0] >= varnum) {
+          varnum = parseInt(g.match(/\d+/)[0]) + 1;
+        }
+      }
+    }
     customReporters.inProgress.push([intype, intype + varnum]);
     rebuildSVG();
+
+    var hs = document.getElementById("blockPreview").querySelectorAll("text"),
+    h = hs[hs.length - 1]
+    sel = window.getSelection();
+    h.focus();
+    var range = document.createRange();
+    range.selectNodeContents(h.firstChild)
+    sel.removeAllRanges();
+    sel.addRange(range);
   }
 
   function closeDialog() {
@@ -84,6 +100,7 @@ var customReporters = {
       <div class="dialog" style="display: none;">
         <div class="dialog-title">New Reporter</div>
         <div class="dialog-content">
+          <div id="deleteInput">&times;</div>
           <div id="blockPreview" contenteditable="true">
 
           </div>
@@ -237,6 +254,35 @@ var customReporters = {
       document.getElementById("customReportersCancel").addEventListener("click", closeDialog);
       document.getElementById("customReportersOK").addEventListener("click", createReporter);
       document.getElementById("blockPreview").addEventListener("input", function(e) {inputsEdited(e)});
+      document.getElementById("blockPreview").addEventListener("focus", function(e) {inputsFocused(e)});
+      document.getElementById("blockPreview").addEventListener("click", function(e) {inputsFocused(e)});
+      document.getElementById("blockPreview").addEventListener("blur", function(e) {inputsBlurred(e)});
+      document.getElementById("deleteInput").addEventListener("click", function(e) {deleteInput(e)});
+    }
+  }
+
+  function inputsFocused(e) {
+    var element = document.getElementById("deleteInput"),
+      bRect = window.getSelection().focusNode.parentNode.getBoundingClientRect();
+    customReporters.lastSelectedInput = window.getSelection().focusNode.parentNode;
+    element.style.opacity = "1";
+    element.style.top = (bRect.top - 20) + "px";
+    element.style.left = (bRect.left + (bRect.width / 2) - 6) + "px";
+  }
+
+  function inputsBlurred(e) {
+    document.getElementById("deleteInput").style.opacity = "0";
+  }
+
+  function deleteInput(e) {
+    var g = document.getElementById("blockPreview").querySelectorAll("text");
+    for(i = 0; i < g.length; i++) {
+      if(g[i].toString() == customReporters.lastSelectedInput.toString()) {
+        customReporters.inProgress.splice(i, 1);
+        inputsBlurred();
+        rebuildSVG();
+        return;
+      }
     }
   }
 
@@ -344,6 +390,21 @@ var customReporters = {
   }
 
   function inputsEdited(e) {
+    var hs = document.getElementById("blockPreview").querySelectorAll("text"),
+      range, sel;
+    for (i = 0; i < hs.length; i++) {
+      if(hs[i].firstChild.nodeType == 1) {
+        hs[i].textContent = ".";
+
+        range = document.createRange();
+        range.selectNodeContents(hs[i].firstChild)
+        sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+        //also update inProgress array
+        return;
+      }
+    }
     var caret = window.getSelection().getRangeAt(0),
       offset = caret.startOffset,
       g = document.getElementById("blockPreview").querySelectorAll("text"),
@@ -355,14 +416,13 @@ var customReporters = {
       customReporters.inProgress[i][1] = g[i].textContent;
     }
     rebuildSVG();
-    h = document.getElementById("blockPreview").querySelectorAll("text")[targetElem],
+    var h = document.getElementById("blockPreview").querySelectorAll("text")[targetElem];
     sel = window.getSelection();
     h.focus();
-    var range = document.createRange();
+    range = document.createRange();
     range.setStart(h.firstChild, offset)
     sel.removeAllRanges();
     sel.addRange(range);
-    //h.setSelectionRange(caret.startOffset, caret.startOffset);
   }
 
   // Cleanup function when the extension is unloaded
@@ -492,7 +552,7 @@ var customReporters = {
 
   ext.showDialog = function(base, exponent) {
     document.getElementById("customReportersDialog").querySelector(".dialog").style.display = "block";
-    customReporters.inProgress = [];
+    customReporters.inProgress = [["label",""]];
     customReporters.inProgressShape = "reporter";
     rebuildSVG();
     return 0;
