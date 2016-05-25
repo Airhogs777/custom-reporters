@@ -217,7 +217,6 @@ var customReporters = {
               Add label text:
               <button class="ui-button" id="addLabel">text</button>
             </div>
-            <input type="checkbox"> Run without screen refresh
           </div>
           <div class="dialog-buttons">
             <button class="ui-button" id="customReportersOK">OK</button>
