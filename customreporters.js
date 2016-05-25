@@ -438,7 +438,7 @@ var customReporters = {
     use_name = title.match(/[a-zA-Z0-9]+/).join("_");
     for(var i = 0; i < _params.length; i++)
     {
-        _params[i] = createParam(norm_name, use_name, _params[i].text, _params[i].type);
+        _params[i] = createParam(norm_name, use_name, _params[i][1], _params[i][0]);
     }
 
     var reporter = {
