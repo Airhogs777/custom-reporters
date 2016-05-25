@@ -552,7 +552,7 @@ var customReporters = {
 
   ext.showDialog = function(base, exponent) {
     document.getElementById("customReportersDialog").querySelector(".dialog").style.display = "block";
-    customReporters.inProgress = [["label",""]];
+    customReporters.inProgress = [["label","myBlock"]];
     customReporters.inProgressShape = "reporter";
     rebuildSVG();
     return 0;
