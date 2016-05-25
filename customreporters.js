@@ -1,3 +1,12 @@
+/*
+ * Custom Reporters
+ * a reskin of themonsterfromthedeep's custom reporter extension
+ * to match the regular custom-block interface
+ * some of this code is adapted from Pixie - https://github.com/nathan/pixie
+ * and Scratchblocks - https://github.com/tjvr/scratchblocks/
+ * and of course themonsterfromthedeep's custom reporter extension - https://github.com/TheMonsterFromTheDeep/scratch-extensions/tree/gh-pages/custom-reporters
+*/
+
 var customReporters = {
   inProgressShape: "reporter",
   inProgress: [],
@@ -38,6 +47,7 @@ var customReporters = {
     </defs>
     <g id="blockPreviewPath">`,`</g>
   </svg>`],
+  reporters: {},
 };
 (function(ext) {
 
@@ -68,7 +78,7 @@ var customReporters = {
 
   function appendDialog() {
     if(!document.getElementById("customReportersDialog")) {
-      var dialogHTML = `<!-- some of this code is adapted from Pixie - https://github.com/nathan/pixie (which also uses an MIT license) and Scratchblocks -https://github.com/tjvr/scratchblocks/ (which is in the public domain) -->
+      var dialogHTML = `
       <link href="http://airhogs777.github.io/custom-reporters/customreporters.css" rel="stylesheet"/>
       <div id="widthTest"></div>
       <div class="dialog" style="display: none;">
@@ -226,7 +236,7 @@ var customReporters = {
       document.getElementById("addLabel").addEventListener("click", function() {addInput("label")});
       document.getElementById("addBoolInput").addEventListener("click", function() {addInput("boolean")});
       document.getElementById("customReportersCancel").addEventListener("click", closeDialog);
-      document.getElementById("customReportersOK").addEventListener("click", closeDialog); //fix this later
+      document.getElementById("customReportersOK").addEventListener("click", createReporter);
       document.getElementById("blockPreview").addEventListener("input", function(e) {inputsEdited(e)});
     }
   }
@@ -367,6 +377,95 @@ var customReporters = {
       appendDialog();
       return {status: 2, msg: 'Ready'};
   };
+
+  function refreshExt() {
+    ScratchExtensions.unregister('Custom Reporters');
+    ScratchExtensions.register('Custom Reporters', descriptor, ext);
+  }
+
+  function addBlock(data){
+      descriptor.blocks.push(data);
+  }
+
+  function createReporter() {
+    closeDialog();
+    var use_name = ''; //Stores the name used in things
+    var title = ''; //Stores base name for use in return block
+    var norm_name = ''; //Stores the name used in all but the reporter block
+    var func_name = ''; //Stores the name used in the reporter - includes inputs
+
+    var param_count = 0;
+    var _params = [];
+    for(var i = 0; i < customReporters.inProgress.length; i++)
+    {
+        if(customReporters.inProgress[i][0] == 'label') {
+          norm_name += customReporters.inProgress[i][1];
+          func_name += customReporters.inProgress[i][1];
+          title += customReporters.inProgress[i][1]; }
+        else
+        {
+            if(customReporters.inProgress[i][0]== 'string') { func_name += '%s'; title += ' [' + customReporters.inProgress[i][1]+ '] '; }
+            if(customReporters.inProgress[i][0] == 'number') { func_name += '%n'; title += ' (' + customReporters.inProgress[i][1] + ') '; }
+            if(customReporters.inProgress[i][0] == 'boolean') { func_name += '%b'; title += ' <' + customReporters.inProgress[i][1]+ '> '; }
+            param_count++;
+            _params[_params.length] = customReporters.inProgress[i];
+        }
+    }
+    use_name = title.match(/[a-zA-Z0-9]+/).join("_");
+    for(var i = 0; i < _params.length; i++)
+    {
+        _params[i] = createParam(norm_name, use_name, _params[i].text, _params[i].type);
+    }
+
+    var reporter = {
+        name: norm_name,
+        blockString: func_name,
+        paramCount: param_count,
+        params: _params,
+        ready: function() {},
+        callback: function() {},
+        value: '',
+        status: false,
+        def: function()
+        {
+            if(this.status === true)
+            {
+                this.status = false;
+                return true;
+            }
+            return false;
+        },
+        call: function(args)
+        {
+            for(var i = 0; i < this.paramCount; i++)
+            {
+                this.params[i].write(args[i]);
+            }
+            this.callback = args[this.paramCount];
+            this.ready = function()
+            {
+                this.callback(this.value);
+                this.ready = function() {};
+            }
+            this.status = true;
+        },
+        ret: function(val)
+        {
+            this.value = val;
+            this.ready();
+        },
+    };
+    customReporters.reporters[use_name] = reporter;
+
+    addBlock(['h','define ' + title,'defr_' + use_name]);
+    addBlock(['R',func_name,'callr_' + use_name]);
+    addBlock([' ',norm_name': return %s','retr_' + use_name]);
+    ext['defr_' + use_name] = function() { return reporter.def(); };
+    ext['callr_' + use_name] = function() { reporter.call(arguments); };
+    ext['retr_' + use_name] = function(val) { reporter.ret(val); };
+
+    refreshExt();
+}
 
   ext.showDialog = function(base, exponent) {
     document.getElementById("customReportersDialog").querySelector(".dialog").style.display = "block";
