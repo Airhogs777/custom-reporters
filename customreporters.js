@@ -482,7 +482,7 @@ var customReporters = {
 
     addBlock(['h','define ' + title,'defr_' + use_name]);
     addBlock(['R',func_name,'callr_' + use_name]);
-    addBlock([' ',norm_name + ': return %s','retr_' + use_name]);
+    addBlock(['c',norm_name + ': return %s','retr_' + use_name]);
     ext['defr_' + use_name] = function() { return reporter.def(); };
     ext['callr_' + use_name] = function() { reporter.call(arguments); };
     ext['retr_' + use_name] = function(val) { reporter.ret(val); };
