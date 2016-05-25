@@ -387,6 +387,30 @@ var customReporters = {
       descriptor.blocks.push(data);
   }
 
+  function createParam(norm_name, use_name, name, type)
+    {
+        var param = {
+            value: '',
+            read: function()
+            {
+                return this.value;
+            },
+            write: function(val)
+            {
+                this.value = val;
+            }
+        };
+
+        if(type == 'boolean') {
+          addBlock(['b', norm_name + ": " + name,'argr_' + use_name + '_' + name]);
+        } else {
+          addBlock(['r', norm_name + ": " + name,'argr_' + use_name + '_' + name]);
+        }
+        ext['argr_' + use_name + '_' + name] = function() { return param.read(); };
+
+        return param;
+    }
+
   function createReporter() {
     closeDialog();
     var use_name = ''; //Stores the name used in things
