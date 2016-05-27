@@ -538,8 +538,7 @@ var customReporters = {
     };
     customReporters.reporters[use_name] = reporter;
 
-    //addBlock(['p','define ' + title,'defr_' + use_name,);
-    addBlock(['p','define ' + title + ' %s','defr_' + use_name, (new Block("foo"))]);
+    addBlock(['h','define ' + title,'defr_' + use_name,);
     for(var i = 0; i < _params.length; i++)
     {
         _params[i] = createParam(norm_name, use_name, _params[i][1], _params[i][0]);
