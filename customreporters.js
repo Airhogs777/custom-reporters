@@ -566,7 +566,7 @@ var customReporters = {
       blocks: [
         // Block type, block name, function name, param1 default value, param2 default value
         ['getParam', 'Make a Reporter', 'showDialog'],
-        ["-"]
+        ["-"], ["-"]
       ]
   };
 
