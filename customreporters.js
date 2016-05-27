@@ -463,7 +463,7 @@ var customReporters = {
         if(type == 'boolean') {
           addBlock(['b', norm_name + ": " + name,'argr_' + use_name + '_' + name]);
         } else {
-          addBlock(['r', norm_name + ": " + name,'argr_' + use_name + '_' + name]);
+          addBlock(['R', norm_name + ": " + name,'argr_' + use_name + '_' + name]);
         }
         ext['argr_' + use_name + '_' + name] = function() { return param.read(); };
 
@@ -495,10 +495,6 @@ var customReporters = {
         }
     }
     use_name = title.match(/[a-zA-Z0-9]+/).join("_");
-    for(var i = 0; i < _params.length; i++)
-    {
-        _params[i] = createParam(norm_name, use_name, _params[i][1], _params[i][0]);
-    }
 
     var reporter = {
         name: norm_name,
@@ -540,9 +536,14 @@ var customReporters = {
     };
     customReporters.reporters[use_name] = reporter;
 
-    addBlock(['h','define ' + title,'defr_' + use_name]);
-    addBlock(['R',func_name,'callr_' + use_name]);
+    addBlock(['p','define ' + title,'defr_' + use_name]);
+    for(var i = 0; i < _params.length; i++)
+    {
+        _params[i] = createParam(norm_name, use_name, _params[i][1], _params[i][0]);
+    }
     addBlock(['f',norm_name + ': return %s','retr_' + use_name]);
+    addBlock(['R',func_name,'callr_' + use_name]);
+    addBlock(["-"]);
     ext['defr_' + use_name] = function() { return reporter.def(); };
     ext['callr_' + use_name] = function() { reporter.call(arguments); };
     ext['retr_' + use_name] = function(val) { reporter.ret(val); };
@@ -562,7 +563,8 @@ var customReporters = {
   var descriptor = {
       blocks: [
         // Block type, block name, function name, param1 default value, param2 default value
-        ['getParam', 'Make a Reporter', 'showDialog']
+        ['getParam', 'Make a Reporter', 'showDialog'],
+        ["-"]
       ]
   };
 
