@@ -465,7 +465,11 @@ var customReporters = {
         } else {
           addBlock(['R', norm_name + ": " + name,'argr_' + use_name + '_' + name]);
         }
-        ext['argr_' + use_name + '_' + name] = function() { return param.read(); };
+        ext['argr_' + use_name + '_' + name] = function() {
+          this.callback(param.read());
+          this.status = true;
+          return param.read();
+        };
 
         return param;
     }
