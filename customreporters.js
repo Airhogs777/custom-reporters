@@ -465,9 +465,8 @@ var customReporters = {
         } else {
           addBlock(['R', norm_name + ": " + name,'argr_' + use_name + '_' + name]);
         }
-        ext['argr_' + use_name + '_' + name] = function() {
+        ext['argr_' + use_name + '_' + name] = function(callback) {
           callback(param.read());
-          status = true;
         };
 
         return param;
