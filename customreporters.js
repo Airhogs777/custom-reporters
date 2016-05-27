@@ -461,9 +461,9 @@ var customReporters = {
         };
 
         if(type == 'boolean') {
-          addBlock(['b', norm_name + ": " + name,'argr_' + use_name + '_' + name]);
+          addBlock(['b', "~" + norm_name + ": " + name,'argr_' + use_name + '_' + name]);
         } else {
-          addBlock(['R', norm_name + ": " + name,'argr_' + use_name + '_' + name]);
+          addBlock(['R', "~" + norm_name + ": " + name,'argr_' + use_name + '_' + name]);
         }
         ext['argr_' + use_name + '_' + name] = function(callback) {
           callback(param.read());
@@ -545,6 +545,7 @@ var customReporters = {
     }
     addBlock(['f',norm_name + ': return %s','retr_' + use_name]);
     addBlock(['R',func_name,'callr_' + use_name]);
+    addBlock(["-"]);
     addBlock(["-"]);
     ext['defr_' + use_name] = function() { return reporter.def(); };
     ext['callr_' + use_name] = function() { reporter.call(arguments); };
